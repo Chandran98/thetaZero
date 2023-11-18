@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:thetazero/constant/constants.dart';
@@ -51,7 +52,7 @@ class _ProductInfoScreenState extends State<ProductInfoScreen> {
                 Color(0xFF1399AD),
               ])),
         ),
-      ),
+      ),backgroundColor: white,
       body: SingleChildScrollView(
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 4.0.w, vertical: 3.h),
@@ -118,7 +119,8 @@ class _ProductInfoScreenState extends State<ProductInfoScreen> {
                                     CupertinoIcons.plus,
                                     size: 3.h,
                                   )),
-                               Text(" $addData "),
+                               Text(" $addData ",  style: GoogleFonts.inter(
+                        fontSize: 14.sp, fontWeight: FontWeight.w700),),
                               InkWell(
                                   onTap: () {
                                    if (addData==0) {

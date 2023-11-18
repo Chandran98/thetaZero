@@ -37,7 +37,7 @@ class _HomeScreenState extends State<HomeScreen> {
           appBar: AppBar(
             centerTitle: true,
             toolbarHeight: 70,
-            title: const Text("widget"),
+            title:  Text("dailefresh",style: GoogleFonts.poppins(fontWeight: FontWeight.w600),),
             leading: Icon(
               CupertinoIcons.line_horizontal_3,
               size: 26.sp,
@@ -49,7 +49,9 @@ class _HomeScreenState extends State<HomeScreen> {
                   spacer3WidthD,
                   const Icon(Icons.store),
                   spacer3WidthD,
-                  const Icon(Icons.shopping_cart_rounded),
+                  Badge(
+                      label: Text(productCart.length.toString()),
+                      child: const Icon(Icons.shopping_cart_rounded)),
                   spacer3WidthD,
                 ],
               )
@@ -102,7 +104,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Hero(
                                         tag: "Product${data!.productId}",
                                         child: Container(
-                                            // child: Image.network(data.productSmallImg),
+                                            child: Image.network(data.productSmallImg),
                                             ),
                                       ),
                                       Container(
@@ -111,8 +113,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                             borderRadius:
                                                 BorderRadius.circular(15)),
                                         child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 8.0, vertical: 1),
+                                          padding:  EdgeInsets.symmetric(
+                                              horizontal: 8.0, vertical: 0.6.h),
                                           child: Text(
                                             "${data.discountValue}% Off",
                                             style: GoogleFonts.inter(
@@ -151,31 +153,71 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 child: Container(
                                                     child: Center(
                                                   child: Text(
-                                                      "₹ ${data.priceList[0].mrpValue}"),
+                                                      "₹ ${data.priceList[0].mrpValue}",
+                                        style: GoogleFonts.inter(
+                                            fontSize: 12.sp,
+                                            fontWeight: FontWeight.w700),),
                                                 ))),
                                             Expanded(
                                                 flex: 5,
-                                                child: InkWell(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      productCart.add(data.productId);
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(25),
-                                                          border: Border.all(
-                                                              color:
-                                                                  Colors.grey)),
-                                                      child: Padding(
-                                                          padding: const EdgeInsets
-                                                                  .symmetric(
-                                                              vertical: 8.0),
-                                                          child: Center(
-                                                              child: Text( "Add Cart")))),
-                                                )
+                                                child:
+                                                    productCart.contains(
+                                                            data.productId)
+                                                        ? InkWell(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                productCart
+                                                                    .remove(data
+                                                                        .productId);
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                                decoration: BoxDecoration(
+                                                                    color: Colors
+                                                                        .green,
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            25),
+                                                                    border: Border.all(
+                                                                        color: Colors
+                                                                            .grey)),
+                                                                child: Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        vertical:
+                                                                            8.0),
+                                                                    child: Center(
+                                                                        child: Text(
+                                                                      "Added",
+                                                                      style: GoogleFonts.inter(
+                                                                          color:
+                                                                              white),
+                                                                    )))),
+                                                          )
+                                                        : InkWell(
+                                                            onTap: () {
+                                                              setState(() {
+                                                                productCart.add(
+                                                                    data.productId);
+                                                              });
+                                                            },
+                                                            child: Container(
+                                                                decoration: BoxDecoration(
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            25),
+                                                                    border: Border.all(
+                                                                        color: Colors
+                                                                            .green)),
+                                                                child: Padding(
+                                                                    padding: const EdgeInsets
+                                                                            .symmetric(
+                                                                        vertical:
+                                                                            8.0),
+                                                                    child: Center(
+                                                                        child: Text(
+                                                                            "Add cart")))),
+                                                          )
 
                                                 //  Container(
                                                 //   decoration: BoxDecoration(
