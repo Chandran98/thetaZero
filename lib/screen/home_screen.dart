@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:nb_utils/nb_utils.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
 import 'package:thetazero/constant/constants.dart';
@@ -23,17 +23,25 @@ class _HomeScreenState extends State<HomeScreen> {
     Provider.of<ProductProvider>(context, listen: false).getProduct();
   }
 
+  List productCart = [];
   int addData = 0;
   @override
   Widget build(BuildContext context) {
     var provider = Provider.of<ProductProvider>(context);
+    var size = MediaQuery.of(context).size;
 
+    final double itemHeight = (size.height - kToolbarHeight - 34) / 2;
+    final double itemWidth = size.width / 2;
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
             centerTitle: true,
             toolbarHeight: 70,
             title: const Text("widget"),
+            leading: Icon(
+              CupertinoIcons.line_horizontal_3,
+              size: 26.sp,
+            ),
             actions: [
               Row(
                 children: [
@@ -58,8 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
           body: GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 2,
+                childAspectRatio: (itemWidth / itemHeight),
               ),
               itemCount: provider.productModal == null
                   ? 0
@@ -82,79 +91,149 @@ class _HomeScreenState extends State<HomeScreen> {
                         decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(5)),
-                        child: Column(
-                          children: [
-                            Expanded(
-                                flex: 2,
-                                child: Hero(
-                                  tag: "Product${data!.productId}",
-                                  child: Container(
-                                    child: Image.network(data.productSmallImg),
-                                  ),
-                                )),
-                            Expanded(
-                                flex: 1,
-                                child: Column(
-                                  children: [
-                                    Text(data.productName),
-                                    Container(
-                                      // color: Colors.green,
-                                      child: Row(
-                                        children: [
-                                          Expanded(
-                                              flex: 3,
-                                              child: Container(
-                                                  child: Center(
-                                                child: Text(
-                                                    data!.priceList[0].mrpValue),
-                                              ))),
-                                          Expanded(
-                                            flex: 5,
-                                            child: Container(
-                                              decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(5),
-                                                  border: Border.all(
-                                                      color: Colors.grey)),
-                                              child: Padding(
-                                                padding: const EdgeInsets.symmetric(
-                                                    vertical: 8.0),
-                                                child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.spaceEvenly,
-                                                  children: [
-                                                    InkWell(
-                                                        onTap: () {
-                                                          setState(() {
-                                                            addData++;
-                                                          });
-                                                        },
-                                                        child: Icon(
-                                                          CupertinoIcons.plus,
-                                                          size: 3.h,
-                                                        )),
-                                                    Text("$addData"),
-                                                    InkWell(
-                                                        onTap: () {
-                                                          setState(() {
-                                                            addData--;
-                                                          });
-                                                        },
-                                                        child: Icon(
-                                                          CupertinoIcons.minus,
-                                                          size: 3.h,
-                                                        ))
-                                                  ],
-                                                ),
-                                              ),
+                        child: Padding(
+                          padding: EdgeInsets.all(0.9.h),
+                          child: Column(
+                            children: [
+                              Expanded(
+                                  flex: 2,
+                                  child: Stack(
+                                    children: [
+                                      Hero(
+                                        tag: "Product${data!.productId}",
+                                        child: Container(
+                                            // child: Image.network(data.productSmallImg),
                                             ),
-                                          )
-                                        ],
                                       ),
-                                    ),
-                                  ],
-                                ))
-                          ],
+                                      Container(
+                                        decoration: BoxDecoration(
+                                            color: Colors.red,
+                                            borderRadius:
+                                                BorderRadius.circular(15)),
+                                        child: Padding(
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 8.0, vertical: 1),
+                                          child: Text(
+                                            "${data.discountValue}% Off",
+                                            style: GoogleFonts.inter(
+                                                color: white, fontSize: 8.sp),
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                  // child: Hero(
+                                  //   tag: "Product${data!.productId}",
+                                  //   child: Container(
+                                  //     child: Image.network(data.productSmallImg),
+                                  //   ),
+                                  // )
+                                  ),
+                              Expanded(
+                                  flex: 1,
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        data.productName,
+                                        style: GoogleFonts.inter(
+                                            fontSize: 10.sp,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      spacer20Height,
+                                      Container(
+                                        // color: Colors.green,
+                                        child: Row(
+                                          children: [
+                                            Expanded(
+                                                flex: 3,
+                                                child: Container(
+                                                    child: Center(
+                                                  child: Text(
+                                                      "₹ ${data.priceList[0].mrpValue}"),
+                                                ))),
+                                            Expanded(
+                                                flex: 5,
+                                                child: InkWell(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      productCart.add(data.productId);
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                      decoration: BoxDecoration(
+                                                          borderRadius:
+                                                              BorderRadius
+                                                                  .circular(25),
+                                                          border: Border.all(
+                                                              color:
+                                                                  Colors.grey)),
+                                                      child: Padding(
+                                                          padding: const EdgeInsets
+                                                                  .symmetric(
+                                                              vertical: 8.0),
+                                                          child: Center(
+                                                              child: Text( "Add Cart")))),
+                                                )
+
+                                                //  Container(
+                                                //   decoration: BoxDecoration(
+                                                //       borderRadius:
+                                                //           BorderRadius.circular(
+                                                //               25),
+                                                //       border: Border.all(
+                                                //           color: Colors.grey)),
+                                                //   child: Padding(
+                                                //     padding: const EdgeInsets
+                                                //         .symmetric(vertical: 8.0),
+                                                //     child: Row(
+                                                //       mainAxisAlignment:
+                                                //           MainAxisAlignment
+                                                //               .spaceEvenly,
+                                                //       children: [
+                                                //         InkWell(
+                                                //             onTap: () {
+                                                //               setState(() {
+                                                //                 addData++;
+                                                //               });
+                                                //             },
+                                                //             child: Icon(
+                                                //               CupertinoIcons.plus,
+                                                //               size: 2.h,
+                                                //             )),
+                                                //         Text("$addData",
+                                                //             style:
+                                                //                 GoogleFonts.inter(
+                                                //                     fontSize:
+                                                //                         11.sp,
+                                                //                     fontWeight:
+                                                //                         FontWeight
+                                                //                             .w600)),
+                                                //         InkWell(
+                                                //             onTap: () {
+                                                //               setState(() {
+                                                //                 addData--;
+                                                //               });
+                                                //             },
+                                                //             child: Icon(
+                                                //               CupertinoIcons
+                                                //                   .minus,
+                                                //               size: 2.h,
+                                                //             ))
+                                                //       ],
+                                                //     ),
+                                                //   ),
+                                                // ),
+
+                                                )
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  ))
+                            ],
+                          ),
                         ),
                       ),
                     ),
